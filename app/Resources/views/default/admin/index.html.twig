@@ -1,0 +1,135 @@
+{% extends ':default/admin:base.html.twig' %}
+
+
+{% block content %}
+    <div class="col-lg-4">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Новые Бронирования</h5>
+                <div class="ibox-tools">
+                    <span class="label label-warning-light pull-right">{{ bookings | length }} новых</span>
+                </div>
+            </div>
+            <div class="ibox-content no-padding">
+                <ul class="list-group">
+
+
+                    <div class="ibox-content">
+
+                        <div>
+                            <div class="feed-activity-list">
+                                {% for booking in bookings %}
+                                    <div class="feed-element">
+                                        <a href="{{ path('admin.messages.details',
+                                        {'id': booking.id, 'entity': 'booking'}) }}" class="pull-left">
+                                            <span class="fa fa-envelope fa-2x"></span>
+                                        </a>
+                                        <div class="media-body ">
+                                            <strong>{{ booking.hall.title }}</strong> {{ booking.email }}<br>
+                                            <small class="text-muted">
+                                                {% set dateReceived = booking.dateReceived | date('d.m.Y') %}
+                                                {% set timeReceived = booking.dateReceived | date('H:i') %}
+
+                                                {{ dateReceived~' - '~timeReceived }}
+                                            </small>
+                                            <div class="well">
+                                                {{ booking.message | nl2br }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Новые сообщения</h5>
+                <div class="ibox-tools">
+                    <span class="label label-warning-light pull-right">{{ messages | length~' '~'новых' }}</span>
+                </div>
+            </div>
+            <div class="ibox-content">
+
+                <div>
+                    <div class="feed-activity-list">
+                        {% for message in messages %}
+                            <div class="feed-element">
+                                <a href="{{ path('admin.messages.details', {
+                                    'entity': 'feedback',
+                                    'id': message.id
+                                }) }}" class="pull-left">
+                                    <span class="fa fa-envelope fa-2x"></span>
+                                </a>
+                                <div class="media-body ">
+                                    Новое сообщение от <strong>{{ message.email }}</strong><br>
+                                    <small class="text-muted">
+                                        {% set dateReceived = message.dateReceived | date('d.m.Y') %}
+                                        {% set timeReceived = message.dateReceived | date('H:i') %}
+
+                                        {{ dateReceived~' - '~timeReceived }}
+                                    </small>
+                                    <div class="well">
+                                        {{ message.message | nl2br }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="col-lg-4">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Новые отзывы</h5>
+                <div class="ibox-tools">
+                    <span class="label label-warning-light pull-right">{{ reviews | length }} новых</span>
+                </div>
+            </div>
+            <div class="ibox-content">
+
+                <div>
+                    <div class="feed-activity-list">
+
+
+                        {% for review in reviews %}
+                                <div class="feed-element">
+                                    <a href="{{ path('admin.messages.details', {
+                                        'entity': 'review',
+                                        'id': review.id
+                                    }) }}" class="pull-left">
+                                        <span class="fa fa-envelope fa-2x"></span>
+                                    </a>
+                                    <div class="media-body ">
+                                        <strong>{{ review.event.title }}</strong> {{ review.email }}<br>
+                                        <small class="text-muted">
+                                            {% set dateReceived = review.dateReceived | date('d.m.Y') %}
+                                            {% set timeReceived = review.dateReceived | date('H:i') %}
+
+                                            {{ dateReceived~' - '~timeReceived }}
+                                        </small>
+                                        <div class="well">
+                                            {{ review.message | nl2br }}
+                                        </div>
+                                    </div>
+                                </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

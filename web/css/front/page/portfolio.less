@@ -1,0 +1,101 @@
+@import "../../config/rwd_config";
+@import "../../config/color_config";
+
+.portfolio {
+
+  .photos {
+    flex: 1 0 auto;
+    margin-top: 60px;
+
+    .thumbnail {
+      border: 0 none;
+      box-shadow: none;
+      margin: 0;
+      padding: 0;
+      position: relative;
+      width: 100%;
+
+      img {
+        width: 100%;
+        display: block;
+      }
+
+      .caption {
+        width:100%;
+        //width: inherit;
+        bottom: 0;
+        position: absolute;
+        background: #000;
+        background: -webkit-linear-gradient(bottom, #000 40%, rgba(0, 0, 0, 0) 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+        background: -moz-linear-gradient(bottom, #000 40%, rgba(0, 0, 0, 0) 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+        background: -o-linear-gradient(bottom, #000 40%, rgba(0, 0, 0, 0) 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+        background: linear-gradient(to top, #000 40%, rgba(0, 0, 0, 0) 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+
+        h3 {
+          color: white;
+          -webkit-font-smoothing: antialiased;
+        }
+
+        p {
+          color: white;
+          -webkit-font-smoothing: antialiased;
+
+        }
+      }
+    }
+  }
+
+  .single-news {
+    @media @phone {
+      padding: 15px;
+    }
+  }
+
+  .event-header {
+    color: @main-color-dark;
+    text-decoration: none;
+    font-family: "Bebas Book";
+    font-weight: bold;
+    font-size: 20px;
+    white-space: nowrap;
+    letter-spacing: 1px;
+    line-height: 20px;
+  }
+
+  .event-subheader {
+    font-size: 13px;
+    color: @main-color-dark;
+
+  }
+
+  .media-content {
+    color: @main-color-grey-light;
+    padding-left: 0;
+    padding-right: 0;
+    font-size: 18px;
+    line-height: 20px;
+
+  }
+
+  .event-heading {
+
+    .event-date-time {
+      span {
+        display: inline-block;
+        position: relative;
+        float: left;
+        font-size: 14px;
+        color: #767A7D;
+        padding: 0;
+      }
+    }
+
+    .event-label {
+      color: @main-color-dark;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+  }
+
+}

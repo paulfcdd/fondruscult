@@ -1,0 +1,44 @@
+{% extends ':default/admin:base.html.twig' %}
+{% form_theme form ':default/admin/form:manage_fields.html.twig' %}
+
+{% block styles %}
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(document).ready(function () {
+            var form = $('#form_{{ form.vars.name }}');
+
+            form.append('<div style="margin-top: 20px;"><button class="btn btn-success" type="submit"><span class="fa fa-floppy-o"></span> Сохранить</button></div>')
+        })
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="col-md-12">
+
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                {% set sectionName = 'admin.'~form.vars.name  %}
+                <h5>Управление разделом {{ sectionName | trans }}</h5>
+            </div>
+            <div class="ibox-content">
+
+                {% if object.files is defined %}
+                    {% if object.files is not empty %}
+                        <a href="{{ path('admin.manage.files', {
+                            'entity': routeParams.entity,
+                            'id': routeParams.id
+                        }) }}" class="btn btn-success">
+                            <i class="fa fa-files-o" aria-hidden="true"></i> Медиафайлы
+                        </a>
+                    {% endif %}
+                {% endif %}
+
+                {{ form_start(form, {'attr': {'id': 'form_'~form.vars.name}}) }}
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

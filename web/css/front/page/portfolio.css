@@ -1,0 +1,73 @@
+.portfolio .photos {
+  flex: 1 0 auto;
+  margin-top: 60px;
+}
+.portfolio .photos .thumbnail {
+  border: 0 none;
+  box-shadow: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  width: 100%;
+}
+.portfolio .photos .thumbnail img {
+  width: 100%;
+  display: block;
+}
+.portfolio .photos .thumbnail .caption {
+  width: 100%;
+  bottom: 0;
+  position: absolute;
+  background: #000;
+  background: -webkit-linear-gradient(bottom, #000 40%, rgba(0, 0, 0, 0) 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+  background: -moz-linear-gradient(bottom, #000 40%, rgba(0, 0, 0, 0) 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+  background: -o-linear-gradient(bottom, #000 40%, rgba(0, 0, 0, 0) 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+  background: linear-gradient(to top, #000 40%, rgba(0, 0, 0, 0) 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+.portfolio .photos .thumbnail .caption h3 {
+  color: white;
+  -webkit-font-smoothing: antialiased;
+}
+.portfolio .photos .thumbnail .caption p {
+  color: white;
+  -webkit-font-smoothing: antialiased;
+}
+@media only screen and (max-width: 479px) {
+  .portfolio .single-news {
+    padding: 15px;
+  }
+}
+.portfolio .event-header {
+  color: #6B3E21;
+  text-decoration: none;
+  font-family: "Bebas Book";
+  font-weight: bold;
+  font-size: 20px;
+  white-space: nowrap;
+  letter-spacing: 1px;
+  line-height: 20px;
+}
+.portfolio .event-subheader {
+  font-size: 13px;
+  color: #6B3E21;
+}
+.portfolio .media-content {
+  color: #898989;
+  padding-left: 0;
+  padding-right: 0;
+  font-size: 18px;
+  line-height: 20px;
+}
+.portfolio .event-heading .event-date-time span {
+  display: inline-block;
+  position: relative;
+  float: left;
+  font-size: 14px;
+  color: #767A7D;
+  padding: 0;
+}
+.portfolio .event-heading .event-label {
+  color: #6B3E21;
+  display: inline-block;
+  cursor: pointer;
+}
