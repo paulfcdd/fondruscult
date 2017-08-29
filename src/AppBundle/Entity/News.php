@@ -12,9 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class News
 {
-    use AbstractEntityTrait;
-
-    use FileTrait;
+    use AbstractEntityTrait,
+        FileTrait
+        ;
 
     /**
      * @var \DateTime

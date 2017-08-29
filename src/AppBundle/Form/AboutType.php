@@ -3,12 +3,12 @@
 namespace AppBundle\Form;
 
 
-use AppBundle\Entity\History;
+use AppBundle\Entity\About;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class HistoryType extends AbstractFormType
+class AboutType extends AbstractFormType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -31,6 +31,6 @@ class HistoryType extends AbstractFormType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(['data_class' => History::class]);
+        $resolver->setDefaults(['data_class' => About::class]);
     }
 }

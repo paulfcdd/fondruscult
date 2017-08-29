@@ -8,10 +8,10 @@ use Doctrine\ORM\Mapping as ORM;
  * Class History
  * @package AppBundle\Entity
  * @ORM\Entity()
- * @ORM\Table(name="history")
+ * @ORM\Table(name="about")
  * @ORM\HasLifecycleCallbacks
  */
-class History
+class About
 {
     use AbstractEntityTrait;
 

@@ -37,36 +37,36 @@ class AdminController extends Controller
     public function indexAction() {
 
         return $this->render(':default/admin:index.html.twig', [
-            'bookings' => $this->getUnreadNotifications(
-               Booking::class, ['booked' => 0, 'status' => 0], ['dateReceived' => 'DESC'], 10
-            ),
-            'messages' => $this->getUnreadNotifications(
-                Feedback::class, ['status' => 0], ['dateReceived' => 'DESC'], 10
-            ),
-            'reviews' => $this->getUnreadNotifications(
-                Review::class, ['status' => 0], ['dateReceived' => 'DESC'], 10
-            )
+//            'bookings' => $this->getUnreadNotifications(
+//               Booking::class, ['booked' => 0, 'status' => 0], ['dateReceived' => 'DESC'], 10
+//            ),
+//            'messages' => $this->getUnreadNotifications(
+//                Feedback::class, ['status' => 0], ['dateReceived' => 'DESC'], 10
+//            ),
+//            'reviews' => $this->getUnreadNotifications(
+//                Review::class, ['status' => 0], ['dateReceived' => 'DESC'], 10
+//            )
         ]);
     }
 
-    /**
-     * @param string $className
-     * @param array $criteria
-     * @param array $orderBy
-     * @param int $limit
-     * @param int $offset
-     * @return array
-     */
-    public function getUnreadNotifications(string $className, array $criteria, array $orderBy, int $limit = null, int $offset = null) {
-
-        $em = $this->getDoctrine()->getManager();
-
-        $repository = $em->getRepository($className);
-
-        $object = $repository->findBy($criteria, $orderBy, $limit, $offset);
-
-        return $object;
-    }
+//    /**
+//     * @param string $className
+//     * @param array $criteria
+//     * @param array $orderBy
+//     * @param int $limit
+//     * @param int $offset
+//     * @return array
+//     */
+//    public function getUnreadNotifications(string $className, array $criteria, array $orderBy, int $limit = null, int $offset = null) {
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $repository = $em->getRepository($className);
+//
+//        $object = $repository->findBy($criteria, $orderBy, $limit, $offset);
+//
+//        return $object;
+//    }
 
     /**
      * @param string $entity

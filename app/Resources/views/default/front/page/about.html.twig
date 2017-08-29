@@ -1,0 +1,17 @@
+{% extends '::base.html.twig' %}
+
+{% block title %} О Фонде | {{ parent() }} {% endblock %}
+
+{% block content %}
+
+    <div class="col-xs-12 text-left padding-left-0 padding-right-0">
+
+        {% include ':default/front/elements:breadcrumbs.html.twig' with {currentPage: 'О Фонде'} %}
+
+        <div class="padding-left-15px padding-right-15px">
+            {{ about.content | raw }}
+        </div>
+
+    </div>
+
+{% endblock %}
