@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Traits\DateTrait;
 use AppBundle\Entity\Traits\FileTrait;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -10,11 +11,17 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="news")
  */
-class News
+class News extends BaseEntity
 {
-    use AbstractEntityTrait,
-        FileTrait
+    use FileTrait,
+        DateTrait
         ;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
+     */
+    private $author;
 
     /**
      * @var \DateTime
@@ -29,6 +36,28 @@ class News
      * @ORM\Column(type="datetime")
      */
     protected $publishEndDate;
+
+    /**
+     * @var string
+     * @ORM\Column(type="text", length=2000, nullable=true)
+     */
+    private $description;
+
+    /**
+     * @return mixed
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * @param mixed $author
+     */
+    public function setAuthor($author)
+    {
+        $this->author = $author;
+    }
 
     /**
      * @return \DateTime
@@ -66,5 +95,19 @@ class News
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
 
+    /**
+     * @param string $description
+     */
+    public function setDescription(string $description)
+    {
+        $this->description = $description;
+    }
 }

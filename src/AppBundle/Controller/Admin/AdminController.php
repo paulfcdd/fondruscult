@@ -113,15 +113,6 @@ class AdminController extends Controller
 
         $form = $this->entityFormBuilder($className, $object);
 
-        if (new $object instanceof Review) {
-            $form->add('event', EntityType::class, [
-                'class' => Event::class,
-                'choice_label' => 'title',
-                'attr' => [
-                    'class' => 'form-control'
-                ]
-            ]);
-        }
 
         $form->handleRequest($request);
 
@@ -130,20 +121,9 @@ class AdminController extends Controller
             $formData = $form
                 ->getData();
 
-            if (!new $object instanceof Review) {
+
+            if ($formData instanceof News) {
                 $formData->setAuthor($this->getUser());
-            }
-
-            if ($formData instanceof History) {
-                $history = $em->getRepository(History::class)->findOneBy(['isEnabled' => 1]);
-                if ($history) {
-                    $history->setEnabled(0);
-                }
-            }
-
-            if (new $object instanceof Review) {
-                $formData->setStatus(1);
-                $formData->setApproved(1);
             }
 
             $em->persist($formData);
