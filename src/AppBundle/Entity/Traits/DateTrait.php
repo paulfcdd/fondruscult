@@ -2,20 +2,28 @@
 
 namespace AppBundle\Entity\Traits;
 
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\HasLifecycleCallbacks()
+ */
 trait DateTrait {
 
     /**
      * @var \DateTime
+	 * @ORM\Column(type="datetime")
      */
     private $dateCreated;
 
     /**
      * @var \DateTime
-     */
+	 * @ORM\Column(type="datetime", nullable=true)
+	 */
     private $dateUpdated;
 
     /**
      * @var \DateTime
+	 * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateRemoved;
 
@@ -28,11 +36,14 @@ trait DateTrait {
     }
 
     /**
-     * @param \DateTime $dateCreated
+     * @ORM\PrePersist()
+	 * @return $this
      */
-    public function setDateCreated($dateCreated)
+    public function setDateCreated()
     {
-        $this->dateCreated = $dateCreated;
+        $this->dateCreated = new \DateTime();
+
+        return $this;
     }
 
     /**
@@ -44,11 +55,13 @@ trait DateTrait {
     }
 
     /**
-     * @param \DateTime $dateUpdated
+     * @ORM\PreUpdate()
      */
-    public function setDateUpdated($dateUpdated)
+    public function setDateUpdated()
     {
-        $this->dateUpdated = $dateUpdated;
+        $this->dateUpdated = new \DateTime();
+
+        return $this;
     }
 
     /**

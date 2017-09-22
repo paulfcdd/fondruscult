@@ -1,2 +1,4 @@
-var/
-vendor/
+var/**
+vendor/**
+/app/config/parameters.yml
+/.idea/**
