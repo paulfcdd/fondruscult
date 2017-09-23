@@ -33,6 +33,12 @@ abstract class BaseEntity
      */
     private $content;
 
+	/**
+	 * @var bool $removed
+	 * @ORM\Column(type="boolean")
+	 */
+    private $removed = 0;
+
     /**
      * @return int
      */
@@ -73,5 +79,22 @@ abstract class BaseEntity
         $this->content = $content;
     }
 
+	/**
+	 * @return bool
+	 */
+	public function isRemoved()
+	{
+		return $this->removed;
+	}
 
+	/**
+	 * @param bool $removed
+	 * @return $this
+	 */
+	public function setRemoved(bool $removed)
+	{
+		$this->removed = $removed;
+
+		return $this;
+	}
 }

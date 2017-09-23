@@ -15,6 +15,7 @@ use AppBundle\Entity\Booking;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class ApiController
@@ -37,7 +38,7 @@ class ApiController extends AdminController
 
     /**
      * @return JsonResponse
-     * @Route("/mark_as_unread/{id}/{entity}", name="admin.api.message_unread")
+     * @Route("/mark-as-unread/{id}/{entity}", name="admin.api.message_unread")
      */
     public function markAsUnreadAjaxAction($id, $entity) {
 
@@ -73,37 +74,32 @@ class ApiController extends AdminController
             return JsonResponse::create(true);
         }
     }
+
     /**
-     * @Route("/object_delete/{object}/{id}", name="admin.api.object_delete")
+	 * @param Request $request
+     * @Route("/object-delete", name="admin.api.object_delete")
+	 * @return JsonResponse
      */
-    public function deleteObjectAjaxAction($object, $id) {
+    public function deleteObjectAjaxAction(Request $request) {
 
-        $objectClass = 'AppBundle\\Entity\\'.ucfirst($object);
+    	$objectName = $request->request->get('objectName');
 
-        $objectEntity = $this->doctrineManager()->getRepository($objectClass)->findOneById($id);
+    	$id = $request->request->get('objectId');
 
-        if ($objectEntity instanceof Hall) {
+        $objectFQN = 'AppBundle\\Entity\\'.ucfirst($objectName);
 
-            /** @var EntityManager $em */
-            $em = $this->doctrineManager()->getRepository(Booking::class);
+        $objectEntity = $this->doctrineManager()->getRepository($objectFQN)->findOneById($id);
 
-            $qb = $em->createQueryBuilder('b')
-                ->delete('AppBundle:Booking', 'b')
-                ->where('b.hall = :hall')
-                ->setParameter('hall', $objectEntity->getId())
-                ->getQuery();
+        if ($this->deleteObjectRelatedFiles($objectFQN, intval($id))) {
+			$objectEntity
+				->setDateRemoved(new \DateTime())
+				->setRemoved(true);
 
-            $qb->getResult();
+			$this->doctrineManager()->flush();
+            return JsonResponse::create();
         }
 
-
-        if ($this->deleteObjectRelatedFiles($objectClass, intval($id))) {
-            $this->doctrineManager()->remove($objectEntity);
-            $this->doctrineManager()->flush();
-            return JsonResponse::create($objectClass);
-        }
-
-
+        return JsonResponse::create('Не удалось удалить объект', 500);
     }
 
     /**

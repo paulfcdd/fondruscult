@@ -23,18 +23,6 @@
 {% set routeName = app.request.attributes.get('_route') %}
 {% set activeTabId = '' %}
 
-{#{% if entity is empty %}#}
-    {#{% set activeTabId = 'dashboard' %}#}
-{#{% else %}#}
-    {#{% set activeTabId = entity.entity %}#}
-{#{% endif %}#}
-
-{#{% if routeName == 'admin.index' %}#}
-    {#{% set entity = 'dashboard' %}#}
-{#{% endif %}#}
-
-{#{{ dump(app.request.attributes.get('_route')) }}#}
-
 <body>
 <div id="wrapper">
     {% block navigation_bar %}
@@ -281,13 +269,13 @@
 
         var objectName = $(this).data('objectname'),
             objectId = $(this).data('objectid'),
-            url = '{{ path('admin.api.object_delete', {'object': '_object', 'id': '_id'}) }}',
+            url = '{{ path('admin.api.object_delete') }}',
             rowId = objectName+'_'+objectId;
 
 
         swal({
             title: "Удалить объект?",
-            text: "Данное действие необратимо!",
+            text: "Объект будет перемещен в корзину",
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
@@ -297,11 +285,15 @@
             $.ajax({
                 url: url.replace('_object', objectName).replace('_id', objectId),
                 method: 'post',
+                data: {
+                    'objectName': objectName,
+                    'objectId': objectId
+                },
                 success: function () {
 
                     swal({
-                        title: 'Удалено',
-                        text: 'Объект был успешно удален',
+                        title: 'Объект был успешно удален',
+                        text: 'Вы можете восстановить его из корзины',
                         type: 'success'
                     }, function () {
                         $('#'+rowId).remove();

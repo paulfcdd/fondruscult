@@ -2,9 +2,6 @@
 
 namespace AppBundle\Controller\Admin;
 
-
-use AppBundle\Entity\Booking;
-use AppBundle\Entity\Event;
 use AppBundle\Entity\Feedback;
 use AppBundle\Entity\File;
 use AppBundle\Entity\History;
@@ -14,6 +11,7 @@ use AppBundle\Form\AbstractFormType;
 use AppBundle\Form\NewsType;
 use AppBundle\Service\FileUploaderService;
 use AppBundle\Service\MailerService;
+use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -37,36 +35,8 @@ class AdminController extends Controller
     public function indexAction() {
 
         return $this->render(':default/admin:index.html.twig', [
-//            'bookings' => $this->getUnreadNotifications(
-//               Booking::class, ['booked' => 0, 'status' => 0], ['dateReceived' => 'DESC'], 10
-//            ),
-//            'messages' => $this->getUnreadNotifications(
-//                Feedback::class, ['status' => 0], ['dateReceived' => 'DESC'], 10
-//            ),
-//            'reviews' => $this->getUnreadNotifications(
-//                Review::class, ['status' => 0], ['dateReceived' => 'DESC'], 10
-//            )
         ]);
     }
-
-//    /**
-//     * @param string $className
-//     * @param array $criteria
-//     * @param array $orderBy
-//     * @param int $limit
-//     * @param int $offset
-//     * @return array
-//     */
-//    public function getUnreadNotifications(string $className, array $criteria, array $orderBy, int $limit = null, int $offset = null) {
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $repository = $em->getRepository($className);
-//
-//        $object = $repository->findBy($criteria, $orderBy, $limit, $offset);
-//
-//        return $object;
-//    }
 
     /**
      * @param string $entity
@@ -82,8 +52,10 @@ class AdminController extends Controller
 
         $repository = $em->getRepository('AppBundle\\Entity\\'.$class);
 
+        $objects = $repository->findBy(['dateRemoved' => null]);
+
         return $this->render(':default/admin:list.html.twig', [
-            'objects' => $repository->findAll(),
+            'objects' => $objects,
         ]);
     }
 
@@ -175,6 +147,35 @@ class AdminController extends Controller
         ]);
     }
 
+	/**
+	 * @param string $entity
+	 * @Route("/admin/{entity}/trash", name="admin.trash")
+	 * @return Response
+	 */
+	public function trashObjectsListAction(string $entity) {
+
+		return $this->render(':default/admin:list.html.twig', [
+			'objects' => $this->getEntityRepository($entity)->findBy(['removed' => true])
+		]);
+
+	}
+
+
+	protected function getEntityRepository(string $entity) {
+
+		return $this->getDoctrine()->getRepository($this->getClassFQN($entity));
+
+	}
+
+	protected function getClassFQN(string $entity) {
+
+		$className = ucfirst($entity);
+
+		$class = 'AppBundle\\Entity\\'.$className;
+
+		return $class;
+	}
+
     /**
      * @param FileUploaderService $uploader
      * @param string $entity
@@ -209,7 +210,7 @@ class AdminController extends Controller
 
 
         return $this->render(':default/admin:files.html.twig', [
-            'files' => $this->fileLoader($this->getClassName($entity), $id),
+            'files' => $this->fileLoader($this->getClassFQN($entity), $id),
             'imagesExt' => FileUploaderService::IMAGES,
             'videosExt' => FileUploaderService::VIDEOS,
         ]);
@@ -230,7 +231,6 @@ class AdminController extends Controller
 
     }
 
-
     /**
      * @param string $class
      * @param int $id
@@ -247,24 +247,4 @@ class AdminController extends Controller
         return $files;
 
     }
-
-    protected function getClassName(string $entity) {
-
-        $className = ucfirst($entity);
-
-        $class = 'AppBundle\\Entity\\'.$className;
-
-        return $class;
-    }
-
-    /**
-     * @param string $entity
-     * @return \Doctrine\Common\Persistence\ObjectRepository
-     */
-    public function getEntityRepository(string $entity) {
-
-        return $this->getDoctrine()->getRepository($this->getClassName($entity));
-
-    }
-
 }

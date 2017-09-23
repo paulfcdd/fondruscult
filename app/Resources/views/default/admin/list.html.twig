@@ -31,16 +31,7 @@
                 <table class="table table-responsive">
                     <thead>
                     <th>Название</th>
-                    {% if routeParams.entity == 'history' %}
-                        <th>Статус</th>
-                    {% endif %}
                     <th>Дата создания</th>
-                    {% if routeParams.entity == 'portfolio' %}
-                        <th>Дата события</th>
-                        <th>Название события</th>
-                        {% else %}
-                            <th>Дата изменения</th>
-                    {% endif %}
                     <th class="text-center">Автор</th>
                     <th class="text-right">Управление</th>
                     </thead>
@@ -111,6 +102,10 @@
                     'entity': app.request.get('entity')
                 }) }}" role="button" class="btn btn-primary">
                     Добавить
+                </a>
+
+                <a href="{{ path('admin.trash', {'entity': app.request.get('entity') }) }}" role="button" class="btn btn-warning pull-right">
+                    <span class="fa fa-trash"></span> Корзина
                 </a>
             </div>
         </div>
