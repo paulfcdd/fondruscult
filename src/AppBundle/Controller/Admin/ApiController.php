@@ -3,18 +3,12 @@
 namespace AppBundle\Controller\Admin;
 
 use AppBundle\Entity\File;
-use AppBundle\Entity\Hall;
-use AppBundle\Entity\News;
-use AppBundle\Entity\Review;
 use AppBundle\Service\MailerService;
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use AppBundle\Entity\Booking;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request as HttpRequest;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -55,27 +49,6 @@ class ApiController extends AdminController
     }
 
     /**
-     * @param $id
-     * @param $entity
-     * @return JsonResponse
-     * @Route("/confirm-action/{id}/{entity}", name="admin.api.confirm_action")
-     */
-    public function confirmAjaxAction($id, $entity) {
-
-        $entityRepository = $this->getEntityRepository($entity)->findOneById($id);
-
-        if ($entityRepository instanceof Booking) {
-            return $this->confirmBooking($entityRepository);
-        }
-
-        if ($entityRepository instanceof Review) {
-            $entityRepository->setApproved(true);
-            $this->doctrineManager()->flush();
-            return JsonResponse::create(true);
-        }
-    }
-
-    /**
 	 * @param Request $request
      * @Route("/object-delete", name="admin.api.object_delete")
 	 * @return JsonResponse
@@ -86,7 +59,7 @@ class ApiController extends AdminController
 
     	$id = $request->request->get('objectId');
 
-        $objectFQN = 'AppBundle\\Entity\\'.ucfirst($objectName);
+        $objectFQN = self::ENTITY_NAMESPACE_PATTERN.ucfirst($objectName);
 
         $objectEntity = $this->doctrineManager()->getRepository($objectFQN)->findOneById($id);
 
@@ -101,6 +74,29 @@ class ApiController extends AdminController
 
         return JsonResponse::create('Не удалось удалить объект', 500);
     }
+
+	/**
+	 * @param Request $request
+	 * @Route("/repair-object", name="admin.api.object_repair")
+	 * @return JsonResponse
+	 */
+    public function repairObjectAction(Request $request) {
+
+		$objectName = $request->request->get('objectName');
+
+		$id = $request->request->get('objectId');
+
+		$objectFQN = self::ENTITY_NAMESPACE_PATTERN.ucfirst($objectName);
+
+		$objectEntity = $this->doctrineManager()->getRepository($objectFQN)->findOneById($id);
+
+		$objectEntity
+			->setRemoved(0);
+
+		$this->doctrineManager()->flush();
+
+		return JsonResponse::create();
+	}
 
     /**
      * @param $entity
@@ -121,42 +117,6 @@ class ApiController extends AdminController
             return JsonResponse::create('not ok', 500);
         }
 
-    }
-
-    /**
-     * @param Booking $booking
-     * @return JsonResponse
-     */
-    protected function confirmBooking(Booking $booking) {
-
-        $em = $this->getDoctrine()->getManager();
-
-        $bookings = $em->getRepository(Booking::class)->findBy([
-            'hall' => $booking->getHall()->getId(),
-            'date' => $booking->getDate(),
-            'booked' => 1
-        ]);
-
-        if (empty($bookings)) {
-            $booking->setBooked(true);
-            $mailer = $this->get(MailerService::class);
-            $mailer
-                ->setSubject('Подтверждение брони зала '.$booking->getHall()->getTitle())
-                ->setFrom($this->getParameter('mail_from'))
-                ->setTo($booking->getEmail())
-                ->setBody('Ваше бронирование было подтверждено');
-
-
-            try {
-                $mailer->sendMessage();
-                $this->doctrineManager()->flush();
-                return JsonResponse::create(true);
-            } catch (DBALException $exception) {
-                return JsonResponse::create('not ok', 500);
-            }
-        } else {
-            return JsonResponse::create(false);
-        }
     }
 
     /**

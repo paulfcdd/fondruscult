@@ -272,7 +272,6 @@
             url = '{{ path('admin.api.object_delete') }}',
             rowId = objectName+'_'+objectId;
 
-
         swal({
             title: "Удалить объект?",
             text: "Объект будет перемещен в корзину",
@@ -294,6 +293,44 @@
                     swal({
                         title: 'Объект был успешно удален',
                         text: 'Вы можете восстановить его из корзины',
+                        type: 'success'
+                    }, function () {
+                        $('#'+rowId).remove();
+                    });
+
+                }
+            });
+        });
+    });
+
+    $('.repair-object').on('click', function () {
+
+        var objectName = $(this).data('objectname'),
+            objectId = $(this).data('objectid'),
+            url = '{{ path('admin.api.object_repair') }}',
+            rowId = objectName+'_'+objectId;
+
+        swal({
+            title: "Восстановить объект?",
+            text: "Объект будет восстановлен",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonColor: "#DDD848",
+            confirmButtonText: "Восстановить",
+            closeOnConfirm: false
+        }, function () {
+            $.ajax({
+                url: url,
+                method: 'post',
+                data: {
+                    'objectName': objectName,
+                    'objectId': objectId
+                },
+                success: function () {
+
+                    swal({
+                        title: 'Объект был успешно восстановлен',
+                        text: 'Он будет доступен в списке объектов',
                         type: 'success'
                     }, function () {
                         $('#'+rowId).remove();

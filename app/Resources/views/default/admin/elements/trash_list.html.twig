@@ -1,0 +1,60 @@
+<div class="col-md-12">
+	<div class="ibox float-e-margins">
+		<div class="ibox-title">
+			{% set sectionName = 'admin.'~app.request.attributes.get('_route_params')['entity']  %}
+			<h5>{{ sectionName | trans }}: корзина</h5>
+			<div class="ibox-tools">
+				<a class="collapse-link">
+					<i class="fa fa-chevron-up"></i>
+				</a>
+			</div>
+		</div>
+		<div class="ibox-content">
+			<table class="table table-responsive">
+				<thead>
+				<th>Название</th>
+				<th>Дата удаления</th>
+				<th class="text-center">Автор</th>
+				<th class="text-right">Управление</th>
+				</thead>
+				<tbody>
+
+				{% for object in objects %}
+					<tr id="{{ routeParams.entity~'_'~object.id }}">
+						<td>{{ object.title }}</td>
+						<td>{{ object.dateRemoved | date('d.m.Y') }}</td>
+						<td class="text-center">
+							{{ object.author.username }}
+						</td>
+						<td class="text-right">
+
+							<div class="btn-group">
+								<button class="btn btn-primary repair-object"
+										data-objectname="{{ routeParams.entity }}"
+										data-objectid="{{ object.id }}">
+									<span class="fa fa-undo"></span>
+								</button>
+
+								<button class="btn btn-danger delete-object"
+										data-objectname="{{ routeParams.entity }}"
+										data-objectid="{{ object.id }}">
+									<span class="fa fa-trash"></span>
+								</button>
+							</div>
+						</td>
+					</tr>
+				{% endfor %}
+
+				</tbody>
+			</table>
+		</div>
+		<div class="ibox-footer">
+			<a href="{{ path('admin.list', {
+				'entity': app.request.get('entity')
+			}) }}" role="button" class="btn btn-primary">
+				Назад
+			</a>
+
+		</div>
+	</div>
+</div>

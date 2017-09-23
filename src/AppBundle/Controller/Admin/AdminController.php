@@ -2,28 +2,15 @@
 
 namespace AppBundle\Controller\Admin;
 
-use AppBundle\Entity\Feedback;
 use AppBundle\Entity\File;
-use AppBundle\Entity\History;
 use AppBundle\Entity\News;
-use AppBundle\Entity\Review;
-use AppBundle\Form\AbstractFormType;
-use AppBundle\Form\NewsType;
 use AppBundle\Service\FileUploaderService;
-use AppBundle\Service\MailerService;
-use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
 
 
 class AdminController extends Controller
@@ -46,13 +33,7 @@ class AdminController extends Controller
      */
     public function listAction(string $entity) {
 
-        $em = $this->getDoctrine()->getManager();
-
-        $class = ucfirst($entity);
-
-        $repository = $em->getRepository('AppBundle\\Entity\\'.$class);
-
-        $objects = $repository->findBy(['dateRemoved' => null]);
+        $objects = $this->getEntityRepository($entity)->findBy(['removed' => false]);
 
         return $this->render(':default/admin:list.html.twig', [
             'objects' => $objects,
@@ -155,7 +136,8 @@ class AdminController extends Controller
 	public function trashObjectsListAction(string $entity) {
 
 		return $this->render(':default/admin:list.html.twig', [
-			'objects' => $this->getEntityRepository($entity)->findBy(['removed' => true])
+			'objects' => $this->getEntityRepository($entity)->findBy(['removed' => true]),
+			'template' => 'trash_list',
 		]);
 
 	}

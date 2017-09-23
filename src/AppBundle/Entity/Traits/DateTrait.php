@@ -74,10 +74,13 @@ trait DateTrait {
 
     /**
      * @param \DateTime $dateRemoved
+	 * @return $this
      */
     public function setDateRemoved($dateRemoved)
     {
         $this->dateRemoved = $dateRemoved;
+
+        return $this;
     }
 
 
