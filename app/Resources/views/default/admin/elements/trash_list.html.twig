@@ -31,11 +31,13 @@
 							<div class="btn-group">
 								<button class="btn btn-primary repair-object"
 										data-objectname="{{ routeParams.entity }}"
+										data-isrepair="{% if object.isRemoved == true %}1{% endif %}"
 										data-objectid="{{ object.id }}">
 									<span class="fa fa-undo"></span>
 								</button>
 
 								<button class="btn btn-danger delete-object"
+										data-isremoved="{% if object.isRemoved == true %}1{% endif %}"
 										data-objectname="{{ routeParams.entity }}"
 										data-objectid="{{ object.id }}">
 									<span class="fa fa-trash"></span>

@@ -32,12 +32,16 @@
 								<a href="{{ path('admin.manage', {
 									'entity': entity,
 									'id': object.id
-								}) }}" role="button" class="btn btn-success"><span class="fa fa-edit"></span></a>
-								<a href="#" role="button" class="btn btn-danger delete-object"
+								}) }}" role="button" class="btn btn-success">
+									<span class="fa fa-edit"></span>
+								</a>
+
+								<button class="btn btn-danger delete-object"
+								   data-isremoved="{% if object.isRemoved == false %}0{% endif %}"
 								   data-objectname="{{ routeParams.entity }}"
 								   data-objectid="{{ object.id }}">
 									<span class="fa fa-trash"></span>
-								</a>
+								</button>
 							</div>
 						</td>
 					</tr>

@@ -269,69 +269,114 @@
 
         var objectName = $(this).data('objectname'),
             objectId = $(this).data('objectid'),
-            url = '{{ path('admin.api.object_delete') }}',
-            rowId = objectName+'_'+objectId;
+            isRemoved = $(this).data('isremoved');
 
-        swal({
-            title: "Удалить объект?",
-            text: "Объект будет перемещен в корзину",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Удалить",
-            closeOnConfirm: false
-        }, function () {
-            $.ajax({
-                url: url.replace('_object', objectName).replace('_id', objectId),
-                method: 'post',
-                data: {
-                    'objectName': objectName,
-                    'objectId': objectId
-                },
-                success: function () {
-
-                    swal({
-                        title: 'Объект был успешно удален',
-                        text: 'Вы можете восстановить его из корзины',
-                        type: 'success'
-                    }, function () {
-                        $('#'+rowId).remove();
-                    });
-
-                }
-            });
-        });
+        //if isRemoved is FALSE then set requestStatus parameter equal to 0 -> soft delete
+        //if isRemoved is TRUE then set requestStatus parameter equal to -1 -> hard delete delete
+        if (isRemoved === 0) {
+            swalMessageConstructor(0, objectName, objectId);
+        } else {
+            swalMessageConstructor(-1, objectName, objectId);
+        }
     });
 
     $('.repair-object').on('click', function () {
 
         var objectName = $(this).data('objectname'),
             objectId = $(this).data('objectid'),
-            url = '{{ path('admin.api.object_repair') }}',
+            isRepair = $(this).data('isrepair');
+
+        if (isRepair === 1) {
+            swalMessageConstructor(1, objectName, objectId);
+        }
+
+    });
+
+    function swalMessageConstructor(requestStatus, objectName, objectId) {
+
+        var swalActionParams = {},
             rowId = objectName+'_'+objectId;
 
-        swal({
-            title: "Восстановить объект?",
-            text: "Объект будет восстановлен",
-            type: "info",
+        switch (requestStatus) {
+            case -1:
+                swalActionParams.url = '{{ path('admin.api.object_delete') }}';
+                swalActionParams.actionName = 'hardDelete';
+                break;
+            case 0:
+                swalActionParams.url = '{{ path('admin.api.object_delete') }}';
+                swalActionParams.actionName = 'softDelete';
+                break;
+            case 1:
+                swalActionParams.url = '{{ path('admin.api.object_repair') }}';
+                swalActionParams.actionName = 'repair';
+                break;
+        }
+
+        return swalAjaxAction( swalActionParams.actionName, swalActionParams.url, objectName, objectId, rowId);
+    }
+
+    function swalAjaxAction(actionName, actionUrl, objectName, objectId, rowId) {
+
+        var swalMessageParams = {};
+
+        switch (actionName) {
+            case 'hardDelete':
+                swalMessageParams.title = 'Удалить объект?';
+                swalMessageParams.text = 'Объект будет удален окончательно';
+                swalMessageParams.type = 'warning';
+                swalMessageParams.confirmButtonColor = '#DD6B55';
+                swalMessageParams.confirmButtonText = 'Удалить';
+                swalMessageParams.url = actionUrl;
+                swalMessageParams.confirmActionTitle = 'Объект был успешно удален из корзины';
+                swalMessageParams.confirmActionText = '';
+                swalMessageParams.confirmActionType = 'success';
+                break;
+            case 'softDelete':
+                swalMessageParams.title = 'Удалить объект?';
+                swalMessageParams.text = 'Объект будет удален в корзину';
+                swalMessageParams.type = 'warning';
+                swalMessageParams.confirmButtonColor = '#DD6B55';
+                swalMessageParams.confirmButtonText = 'Удалить';
+                swalMessageParams.url = actionUrl;
+                swalMessageParams.confirmActionTitle = 'Объект был успешно удален в корзину';
+                swalMessageParams.confirmActionText = 'Вы можете переместить объект в из корзины обратно в список';
+                swalMessageParams.confirmActionType = 'success';
+
+                break;
+            case 'repair':
+                swalMessageParams.title = 'Восстановить объект?';
+                swalMessageParams.text = 'Объект будет восстановлен в списке';
+                swalMessageParams.type = 'info';
+                swalMessageParams.confirmButtonColor = '#26DD3D';
+                swalMessageParams.confirmButtonText = 'Восстановить';
+                swalMessageParams.url = actionUrl;
+                swalMessageParams.confirmActionTitle = 'Объект был успешно восстановлен';
+                swalMessageParams.confirmActionText = 'Он будет доступен в списке объектов';
+                swalMessageParams.confirmActionType = 'success';
+                break;
+        }
+
+        return swal({
+            title: swalMessageParams.title,
+            text: swalMessageParams.text,
+            type: swalMessageParams.type,
             showCancelButton: true,
-            confirmButtonColor: "#DDD848",
-            confirmButtonText: "Восстановить",
+            confirmButtonColor: swalMessageParams.confirmButtonColor,
+            confirmButtonText: swalMessageParams.confirmButtonText,
             closeOnConfirm: false
         }, function () {
             $.ajax({
-                url: url,
+                url: actionUrl,
                 method: 'post',
                 data: {
                     'objectName': objectName,
                     'objectId': objectId
                 },
                 success: function () {
-
                     swal({
-                        title: 'Объект был успешно восстановлен',
-                        text: 'Он будет доступен в списке объектов',
-                        type: 'success'
+                        title: swalMessageParams.confirmActionTitle,
+                        text: swalMessageParams.confirmActionText,
+                        type: swalMessageParams.confirmActionType
                     }, function () {
                         $('#'+rowId).remove();
                     });
@@ -339,18 +384,8 @@
                 }
             });
         });
-    });
 
-
-    function getRandomHexColor() {
-        var letters = '0123456789ABCDEF';
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
     }
-
 </script>
 
 {% block scripts %}{% endblock %}
