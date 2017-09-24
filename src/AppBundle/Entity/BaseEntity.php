@@ -8,7 +8,12 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity()
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="disct", type="text")
- * @ORM\DiscriminatorMap({"news"="News", "project"="Project"})
+ * @ORM\DiscriminatorMap({
+ *     "news"="News",
+ *     "project"="Project",
+ *     "about"="About",
+ *     "document"="Document",
+ *	 })
  */
 abstract class BaseEntity
 {
@@ -32,6 +37,12 @@ abstract class BaseEntity
      * @ORM\Column(type="text", length=20000)
      */
     private $content;
+
+	/**
+	 * @ORM\ManyToOne(targetEntity="User")
+	 * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
+	 */
+	private $author;
 
 	/**
 	 * @var bool $removed
@@ -78,6 +89,22 @@ abstract class BaseEntity
     {
         $this->content = $content;
     }
+
+	/**
+	 * @return mixed
+	 */
+	public function getAuthor()
+	{
+		return $this->author;
+	}
+
+	/**
+	 * @param mixed $author
+	 */
+	public function setAuthor($author)
+	{
+		$this->author = $author;
+	}
 
 	/**
 	 * @return bool

@@ -18,12 +18,6 @@ class News extends BaseEntity
         ;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
-     */
-    private $author;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(type="datetime")
@@ -42,22 +36,6 @@ class News extends BaseEntity
      * @ORM\Column(type="text", length=2000, nullable=true)
      */
     private $description;
-
-    /**
-     * @return mixed
-     */
-    public function getAuthor()
-    {
-        return $this->author;
-    }
-
-    /**
-     * @param mixed $author
-     */
-    public function setAuthor($author)
-    {
-        $this->author = $author;
-    }
 
     /**
      * @return \DateTime

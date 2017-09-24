@@ -271,11 +271,11 @@
             objectId = $(this).data('objectid'),
             isRemoved = $(this).data('isremoved');
 
-        //if isRemoved is FALSE then set requestStatus parameter equal to 0 -> soft delete
-        //if isRemoved is TRUE then set requestStatus parameter equal to -1 -> hard delete delete
         if (isRemoved === 0) {
+            //if isRemoved is FALSE then set requestStatus parameter equal to 0 -> soft delete
             swalMessageConstructor(0, objectName, objectId);
         } else {
+            //if isRemoved is TRUE then set requestStatus parameter equal to -1 -> hard delete delete
             swalMessageConstructor(-1, objectName, objectId);
         }
     });
@@ -287,6 +287,7 @@
             isRepair = $(this).data('isrepair');
 
         if (isRepair === 1) {
+            //if isRemoved is TRUE then set requestStatus parameter equal to 1 -> repair
             swalMessageConstructor(1, objectName, objectId);
         }
 
