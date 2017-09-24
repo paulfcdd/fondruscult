@@ -2,3 +2,4 @@ var/**
 vendor/**
 /app/config/parameters.yml
 /.idea/**
+web/upload/

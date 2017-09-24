@@ -16,7 +16,9 @@ use Symfony\Component\HttpFoundation\Response;
 class AdminController extends Controller
 {
 
-    /**
+	const ENTITY_NAMESPACE_PATTERN = 'AppBundle\\Entity\\';
+
+	/**
      * @Route("/admin/dashboard", name="admin.index")
      */
     public function indexAction() {
@@ -56,12 +58,12 @@ class AdminController extends Controller
 
         $className = ucfirst($entity);
 
-        $class = 'AppBundle\\Entity\\'.$className;
+        $class = self::ENTITY_NAMESPACE_PATTERN.$className;
 
         $object = new $class();
 
         if ($id) {
-            $object = $em->getRepository($class)->findOneById($id);
+            $object = $this->getEntityRepository($entity)->findOneById($id);
         }
 
         $form = $this->entityFormBuilder($className, $object);

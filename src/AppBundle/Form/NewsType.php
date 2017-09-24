@@ -4,10 +4,7 @@ namespace AppBundle\Form;
 
 
 use AppBundle\Form\Type\FileUploadType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type as CoreType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class NewsType extends AbstractFormType
@@ -18,11 +15,15 @@ class NewsType extends AbstractFormType
 
         $builder
             ->add('files', FileUploadType::class)
-            ->add('publishStartDate', DateType::class, [
+            ->add('publishStartDate', CoreType\DateType::class, [
                 'label' => 'Старт публикации',
+				'widget' => 'single_text',
+				'format' => 'yyyy-MM-dd',
             ])
-            ->add('publishEndDate', DateType::class, [
-                'label' => 'Конец публикации'
+            ->add('publishEndDate', CoreType\DateType::class, [
+                'label' => 'Конец публикации',
+				'widget' => 'single_text',
+				'format' => 'yyyy-MM-dd',
             ]);
 
     }

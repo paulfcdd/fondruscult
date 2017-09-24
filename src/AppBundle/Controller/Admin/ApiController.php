@@ -19,9 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ApiController extends AdminController
 {
-
-    const ENTITY_NAMESPACE_PATTERN = 'AppBundle\\Entity\\';
-
     /**
      * @param string|null $name
      * @return \Doctrine\Common\Persistence\ObjectManager|object
@@ -63,17 +60,21 @@ class ApiController extends AdminController
 
         $objectEntity = $this->doctrineManager()->getRepository($objectFQN)->findOneById($id);
 
-        if ($this->deleteObjectRelatedFiles($objectFQN, intval($id))) {
-			$objectEntity
-				->setDateRemoved(new \DateTime())
-				->setRemoved(true);
+        if ($objectEntity->isRemoved()) {
+			if ($this->deleteObjectRelatedFiles($objectFQN, intval($id))) {
+				$this->doctrineManager()->remove($objectEntity);
+				$this->doctrineManager()->flush();
+				return JsonResponse::create();
+			}
+		}
 
-			$this->doctrineManager()->flush();
-            return JsonResponse::create();
-        }
+		$objectEntity
+			->setDateRemoved(new \DateTime())
+			->setRemoved(true);
 
-        return JsonResponse::create('Не удалось удалить объект', 500);
-    }
+		$this->doctrineManager()->flush();
+		return JsonResponse::create();
+	}
 
 	/**
 	 * @param Request $request
@@ -187,14 +188,14 @@ class ApiController extends AdminController
     }
 
     /**
-     * @param string $objectClass
+     * @param string $objectFQN
      * @param int $objectId
      * @return bool
      */
-    private function deleteObjectRelatedFiles(string $objectClass, int $objectId) {
+    private function deleteObjectRelatedFiles(string $objectFQN, int $objectId) {
 
         $objectFiles = $this->doctrineManager()->getRepository(File::class)->findBy([
-            'entity' => $objectClass,
+            'entity' => $objectFQN,
             'foreignKey' => $objectId,
         ]);
 
